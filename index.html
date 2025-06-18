@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manajemen Stok Barang</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Stok Barang</h1>
-    <form id="item-form">
-      <input type="text" id="item-name" placeholder="Nama Barang" required />
-          <button type="submit">Tambah Barang</button>
-     </form>
-     <ul id="item-list"></ul>                      
-   </div>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Manajemen Stok Barang</title>
+        <link rel="stylesheet" href="style.css">
+        </head>
+        <body>
+          <div class="container">
+              <h1>Manajemen Stok Barang</h1>
 
- <script src="script.js"></script>
-</body>
-</html>
-                                          
+                  <form id="item-form">
+                        <input type="text" id="item-nama" placeholder="Nama Barang" required />
+                              <input type="text" id="item-lokasi" placeholder="Lokasi Barang" required />
+                                    <input type="number" id="item-stok" placeholder="Stok" required />
+                                          <button type="submit">Tambah / Simpan</button>
+                                              </form>
+
+                                                  <input type="text" id="search" placeholder="Cari nama barang...">
+                                                      <ul id="item-list"></ul>
+                                                        </div>
+
+                                                          <script src="script.js"></script>
+                                                          </body>
+                                                          </html>
+                                                          
