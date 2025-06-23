@@ -10,10 +10,14 @@ const stokInput = document.getElementById("item-stok");
 const kategoriInput = document.getElementById("item-kategori");
 const kategori = kategoriInput.value.trim();
 const searchInput = document.getElementById("search");
+const kategoriFilterInput = document.getElementById("filter-kategori");
+kategoriFilterInput.addEventListener("input", () => {
+  fetchData(searchInput.value, kategoriFilterInput.value);
+});
 
 let editingId = null;
 
-async function fetchData(filter = "") {
+async function fetchData(searchFilter = "", kategoriFilter = "") {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/barang?select=*`, {
     headers: {
       apikey: SUPABASE_KEY,
@@ -22,10 +26,12 @@ async function fetchData(filter = "") {
   });
   const data = await res.json();
   const filtered = data.filter(item =>
-    item.nama.toLowerCase().includes(filter.toLowerCase())
+    item.nama.toLowerCase().includes(searchFilter.toLowerCase()) &&
+    item.kategori.toLowerCase().includes(kategoriFilter.toLowerCase())
   );
   renderItems(filtered);
 }
+
 
 function renderItems(items) {
   itemList.innerHTML = "";
