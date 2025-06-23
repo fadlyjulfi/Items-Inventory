@@ -7,6 +7,8 @@ const form = document.getElementById("item-form");
 const namaInput = document.getElementById("item-nama");
 const lokasiInput = document.getElementById("item-lokasi");
 const stokInput = document.getElementById("item-stok");
+const kategoriInput = document.getElementById("item-kategori");
+const kategori = kategoriInput.value.trim();
 const searchInput = document.getElementById("search");
 
 let editingId = null;
@@ -30,14 +32,15 @@ function renderItems(items) {
   items.forEach(item => {
     const li = document.createElement("li");
     li.innerHTML = `
-      <strong>${item.nama}</strong><br>
-      Lokasi: ${item.lokasi}<br>
-      Stok: ${item.stok}<br>
-      <div class="controls">
-        <button onclick="editItem('${item.id}', '${item.nama}', '${item.lokasi}', ${item.stok})">Edit</button>
-        <button onclick="deleteItem('${item.id}')">Hapus</button>
-      </div>
-    `;
+  <strong>${item.nama}</strong><br>
+  Kategori: ${item.kategori || "Tidak ada"}<br>
+  Lokasi: ${item.lokasi}<br>
+  Stok: ${item.stok}<br>
+  <div class="controls">
+    <button onclick="editItem('${item.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori || ""}')">Edit</button>
+    <button onclick="deleteItem('${item.id}')">Hapus</button>
+  </div>
+`;
     itemList.appendChild(li);
   });
 }
@@ -58,7 +61,7 @@ form.addEventListener("submit", async (e) => {
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ nama, lokasi, stok })
+      body: JSON.stringify({ nama, lokasi, stok, kategori })
     });
     editingId = null;
   } else {
@@ -69,7 +72,7 @@ form.addEventListener("submit", async (e) => {
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ nama, lokasi, stok })
+       body: JSON.stringify({ nama, lokasi, stok, kategori }
     });
   }
 
@@ -81,6 +84,7 @@ function editItem(id, nama, lokasi, stok) {
   namaInput.value = nama;
   lokasiInput.value = lokasi;
   stokInput.value = stok;
+  kategoriInput.value = input;
   editingId = id;
 }
 
