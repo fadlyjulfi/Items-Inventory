@@ -54,39 +54,46 @@ function renderItems(items) {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const nama = namaInput.value.trim();
   const lokasi = lokasiInput.value.trim();
   const stok = parseInt(stokInput.value);
   const kategori = kategoriInput.value.trim();
 
-  if (!nama || !lokasi || isNaN(stok) || !kategori) return;
+  if (!nama || !lokasi || isNaN(stok) || !kategori) {
+    alert("Isi semua data!");
+    return;
+  }
 
-  if (editingId) {
-    await fetch(`${SUPABASE_URL}/rest/v1/barang?id=eq.${editingId}`, {
-      method: "PATCH",
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ nama, lokasi, stok, kategori })
-    });
-    editingId = null;
-  } else {
-    await fetch(`${SUPABASE_URL}/rest/v1/barang`, {
+  const payload = { nama, lokasi, stok, kategori };
+  console.log("📤 Menyimpan ke Supabase:", payload);
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/barang`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ nama, lokasi, stok, kategori })
+      body: JSON.stringify(payload)
     });
-  }
 
-  form.reset();
-  fetchData(searchInput.value, kategoriFilterInput.value);
+    if (!res.ok) {
+      const errorData = await res.text();
+      alert("❌ Gagal menambahkan: " + errorData);
+      return;
+    }
+
+    console.log("✅ Data berhasil ditambahkan.");
+    form.reset();
+    fetchData();
+
+  } catch (err) {
+    alert("❌ ERROR: " + err.message);
+  }
 });
+
 
 function editItem(id, nama, lokasi, stok, kategori) {
   namaInput.value = nama;
