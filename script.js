@@ -1,6 +1,6 @@
-const SUPABASE_URL = "https://evvavlryheowsnvlukww.supabase.co";
+const SUPABASE_URL = "https://flsjawyahxsoqdewtynd.supabase.co";
 const SUPABASE_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV2dmF2bHJ5aGVvd3Nudmx1a3d3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAyMTM4MjQsImV4cCI6MjA2NTc4OTgyNH0.DolOithfUAILJm3WAuZQzHWyYxMAjVRmJlGVzoINL3s";
+  "4OTgyNH0.DolOithfUAILJm3WAuZQzHWyYxMAjVRmJlGVzoINL3s";
 
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
