@@ -1,6 +1,5 @@
 const SUPABASE_URL = "https://flsjawyahxsoqdewtynd.supabase.co";
-const SUPABASE_KEY =
-  "4OTgyNH0.DolOithfUAILJm3WAuZQzHWyYxMAjVRmJlGVzoINL3s";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsc2phd3lhaHhzb3FkZXd0eW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2NTczNDcsImV4cCI6MjA2NjIzMzM0N30.x47QB8O-WC0e10FXm3Ih8nUwgv5W0XdKMxM098SRMYY";
 
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
@@ -14,21 +13,26 @@ const kategoriFilterInput = document.getElementById("filter-kategori");
 let editingId = null;
 
 async function fetchData(searchFilter = "", kategoriFilter = "") {
+  console.log("🔄 Memanggil fetchData...");
   const res = await fetch(`${SUPABASE_URL}/rest/v1/barang?select=*`, {
     headers: {
       apikey: SUPABASE_KEY,
-      Authorization: `Bearer ${SUPABASE_KEY}`
+      Authorization: `Bearer ${SUPABASE_KEY}`,
     }
   });
   const data = await res.json();
+  console.log("📦 Data dari Supabase:", data);
+
   const filtered = data.filter(item =>
     item.nama.toLowerCase().includes(searchFilter.toLowerCase()) &&
     item.kategori.toLowerCase().includes(kategoriFilter.toLowerCase())
   );
+
   renderItems(filtered);
 }
 
 function renderItems(items) {
+  console.log("🔧 Menampilkan", items.length, "barang");
   itemList.innerHTML = "";
   items.forEach(item => {
     const li = document.createElement("li");
@@ -38,7 +42,7 @@ function renderItems(items) {
       Lokasi: ${item.lokasi}<br>
       Stok: ${item.stok}<br>
       <div class="controls">
-        <button onclick="editItem('${item.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori || ""}')">Edit</button>
+        <button onclick="editItem('${item.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori}')">Edit</button>
         <button onclick="deleteItem('${item.id}')">Hapus</button>
       </div>
     `;
@@ -112,4 +116,3 @@ kategoriFilterInput.addEventListener("change", () => {
 });
 
 fetchData("", "");
-              
