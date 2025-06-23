@@ -8,12 +8,8 @@ const namaInput = document.getElementById("item-nama");
 const lokasiInput = document.getElementById("item-lokasi");
 const stokInput = document.getElementById("item-stok");
 const kategoriInput = document.getElementById("item-kategori");
-const kategori = kategoriInput.value.trim();
 const searchInput = document.getElementById("search");
 const kategoriFilterInput = document.getElementById("filter-kategori");
-kategoriFilterInput.addEventListener("input", () => {
-  fetchData(searchInput.value, kategoriFilterInput.value);
-});
 
 let editingId = null;
 
@@ -32,21 +28,20 @@ async function fetchData(searchFilter = "", kategoriFilter = "") {
   renderItems(filtered);
 }
 
-
 function renderItems(items) {
   itemList.innerHTML = "";
   items.forEach(item => {
     const li = document.createElement("li");
     li.innerHTML = `
-  <strong>${item.nama}</strong><br>
-  Kategori: ${item.kategori || "Tidak ada"}<br>
-  Lokasi: ${item.lokasi}<br>
-  Stok: ${item.stok}<br>
-  <div class="controls">
-    <button onclick="editItem('${item.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori || ""}')">Edit</button>
-    <button onclick="deleteItem('${item.id}')">Hapus</button>
-  </div>
-`;
+      <strong>${item.nama}</strong><br>
+      Kategori: ${item.kategori || "-"}<br>
+      Lokasi: ${item.lokasi}<br>
+      Stok: ${item.stok}<br>
+      <div class="controls">
+        <button onclick="editItem('${item.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori || ""}')">Edit</button>
+        <button onclick="deleteItem('${item.id}')">Hapus</button>
+      </div>
+    `;
     itemList.appendChild(li);
   });
 }
@@ -56,8 +51,9 @@ form.addEventListener("submit", async (e) => {
   const nama = namaInput.value.trim();
   const lokasi = lokasiInput.value.trim();
   const stok = parseInt(stokInput.value);
+  const kategori = kategoriInput.value.trim();
 
-  if (!nama || !lokasi || isNaN(stok)) return;
+  if (!nama || !lokasi || isNaN(stok) || !kategori) return;
 
   if (editingId) {
     await fetch(`${SUPABASE_URL}/rest/v1/barang?id=eq.${editingId}`, {
@@ -78,19 +74,19 @@ form.addEventListener("submit", async (e) => {
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json"
       },
-       body: JSON.stringify({ nama, lokasi, stok, kategori }
+      body: JSON.stringify({ nama, lokasi, stok, kategori })
     });
   }
 
   form.reset();
-  fetchData(searchInput.value);
+  fetchData(searchInput.value, kategoriFilterInput.value);
 });
 
-function editItem(id, nama, lokasi, stok) {
+function editItem(id, nama, lokasi, stok, kategori) {
   namaInput.value = nama;
   lokasiInput.value = lokasi;
   stokInput.value = stok;
-  kategoriInput.value = input;
+  kategoriInput.value = kategori;
   editingId = id;
 }
 
@@ -103,12 +99,17 @@ async function deleteItem(id) {
         Authorization: `Bearer ${SUPABASE_KEY}`
       }
     });
-    fetchData(searchInput.value);
+    fetchData(searchInput.value, kategoriFilterInput.value);
   }
 }
 
 searchInput.addEventListener("input", () => {
-  fetchData(searchInput.value);
+  fetchData(searchInput.value, kategoriFilterInput.value);
 });
 
-fetchData();
+kategoriFilterInput.addEventListener("change", () => {
+  fetchData(searchInput.value, kategoriFilterInput.value);
+});
+
+fetchData("", "");
+              
