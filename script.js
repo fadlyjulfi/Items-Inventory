@@ -1,5 +1,5 @@
 const SUPABASE_URL = "https://flsjawyahxsoqdewtynd.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsc2phd3lhaHhzb3FkZXd0eW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2NTczNDcsImV4cCI6MjA2NjIzMzM0N30.x47QB8O-WC0e10FXm3Ih8nUwgv5W0XdKMxM098SRMY";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsc2phd3lhaHhzb3FkZXd0eW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA2NTczNDcsImV4cCI6MjA2NjIzMzM0N30.x47QB8O-WC0e10FXm3Ih8nUwgv5W0XdKMxM098SRMYY";
 
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
@@ -15,13 +15,12 @@ let editingId = null;
 async function fetchData(searchFilter = "", kategoriFilter = "") {
   console.log("🔄 Memanggil fetchData...");
   const res = await fetch(`${SUPABASE_URL}/rest/v1/barang?select=*`, {
-  headers: {
-    apikey: SUPABASE_KEY,
-    Authorization: `Bearer ${SUPABASE_KEY}`
-  }
-});
-
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`
+    }
   });
+
   const data = await res.json();
   console.log("📦 Data dari Supabase:", data);
 
@@ -34,7 +33,6 @@ async function fetchData(searchFilter = "", kategoriFilter = "") {
 }
 
 function renderItems(items) {
-  console.log("🔧 Menampilkan", items.length, "barang");
   itemList.innerHTML = "";
   items.forEach(item => {
     const li = document.createElement("li");
@@ -60,40 +58,34 @@ form.addEventListener("submit", async (e) => {
   const stok = parseInt(stokInput.value);
   const kategori = kategoriInput.value.trim();
 
-  if (!nama || !lokasi || isNaN(stok) || !kategori) {
-    alert("Isi semua data!");
-    return;
-  }
+  if (!nama || !lokasi || isNaN(stok) || !kategori) return;
 
-  const payload = { nama, lokasi, stok, kategori };
-  console.log("📤 Menyimpan ke Supabase:", payload);
-
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/barang`, {
+  if (editingId) {
+    await fetch(`${SUPABASE_URL}/rest/v1/barang?id=eq.${editingId}`, {
+      method: "PATCH",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ nama, lokasi, stok, kategori })
+    });
+    editingId = null;
+  } else {
+    await fetch(`${SUPABASE_URL}/rest/v1/barang`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({ nama, lokasi, stok, kategori })
     });
-
-    if (!res.ok) {
-      const errorData = await res.text();
-      alert("❌ Gagal menambahkan: " + errorData);
-      return;
-    }
-
-    console.log("✅ Data berhasil ditambahkan.");
-    form.reset();
-    fetchData();
-
-  } catch (err) {
-    alert("❌ ERROR: " + err.message);
   }
-});
 
+  form.reset();
+  fetchData(searchInput.value, kategoriFilterInput.value);
+});
 
 function editItem(id, nama, lokasi, stok, kategori) {
   namaInput.value = nama;
