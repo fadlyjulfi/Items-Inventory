@@ -1,4 +1,3 @@
-// script.js
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
 const namaInput = document.getElementById("item-nama");
@@ -17,8 +16,10 @@ async function fetchData() {
     li.innerHTML = `
       <strong>${item.nama}</strong> - ${item.kategori}<br>
       Lokasi: ${item.lokasi}, Stok: ${item.stok}<br>
-      <button onclick="editItem('${doc.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori}')">Edit</button>
-      <button onclick="deleteItem('${doc.id}')">Hapus</button>
+      <div class="controls">
+        <button onclick="editItem('${doc.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori}')">Edit</button>
+        <button onclick="deleteItem('${doc.id}')">Hapus</button>
+      </div>
     `;
     itemList.appendChild(li);
   });
