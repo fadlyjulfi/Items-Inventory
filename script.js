@@ -1,5 +1,31 @@
-const API_URL = "https://itemsinventory.great-site.net/htdocs/barang.php";
+// script.js
+import { initializeApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc
+} from "firebase/firestore";
 
+// 🔧 Konfigurasi Firebase milikmu
+const firebaseConfig = {
+  apiKey: "AIzaSyD4gf6uFTflyt-xzs6QVATFORt6m9hlErw",
+  authDomain: "items-8717a.firebaseapp.com",
+  projectId: "items-8717a",
+  storageBucket: "items-8717a.firebasestorage.app",
+  messagingSenderId: "937383205110",
+  appId: "1:937383205110:web:0139a94bb1a414566ff4d7",
+  measurementId: "G-C496NQRZTR"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const barangRef = collection(db, "barang");
+
+// 🔽 Elemen DOM
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
 const namaInput = document.getElementById("item-nama");
@@ -13,9 +39,8 @@ let editingId = null;
 
 async function fetchData(searchFilter = "", kategoriFilter = "") {
   try {
-    const res = await fetch(API_URL);
-    if (!res.ok) throw new Error("Gagal fetch data");
-    const data = await res.json();
+    const snapshot = await getDocs(barangRef);
+    const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     const filtered = data.filter(item =>
       item.nama.toLowerCase().includes(searchFilter.toLowerCase()) &&
@@ -25,7 +50,7 @@ async function fetchData(searchFilter = "", kategoriFilter = "") {
     renderItems(filtered);
   } catch (err) {
     console.error("❌ FETCH ERROR:", err);
-    itemList.innerHTML = "<li style='color:red'>Gagal mengambil data dari server.</li>";
+    itemList.innerHTML = "<li style='color:red'>Gagal mengambil data dari Firestore.</li>";
   }
 }
 
@@ -47,32 +72,24 @@ function renderItems(items) {
   });
 }
 
+// 🔘 Submit Form
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-
   const nama = namaInput.value.trim();
   const lokasi = lokasiInput.value.trim();
   const stok = parseInt(stokInput.value);
   const kategori = kategoriInput.value.trim();
-
   if (!nama || !lokasi || isNaN(stok) || !kategori) return;
 
   const itemData = { nama, lokasi, stok, kategori };
 
   try {
     if (editingId) {
-      await fetch(`${API_URL}?method=patch&id=${editingId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(itemData)
-      });
+      const docRef = doc(db, "barang", editingId);
+      await updateDoc(docRef, itemData);
       editingId = null;
     } else {
-      await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(itemData)
-      });
+      await addDoc(barangRef, itemData);
     }
     form.reset();
     fetchData(searchInput.value, kategoriFilterInput.value);
@@ -82,27 +99,25 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-function editItem(id, nama, lokasi, stok, kategori) {
+window.editItem = function (id, nama, lokasi, stok, kategori) {
   namaInput.value = nama;
   lokasiInput.value = lokasi;
   stokInput.value = stok;
   kategoriInput.value = kategori;
   editingId = id;
-}
+};
 
-async function deleteItem(id) {
+window.deleteItem = async function (id) {
   if (confirm("Yakin ingin menghapus barang ini?")) {
     try {
-      await fetch(`${API_URL}?method=delete&id=${id}`, {
-        method: "POST"
-      });
+      await deleteDoc(doc(db, "barang", id));
       fetchData(searchInput.value, kategoriFilterInput.value);
     } catch (err) {
       alert("❌ Gagal menghapus data.");
       console.error(err);
     }
   }
-}
+};
 
 searchInput.addEventListener("input", () => {
   fetchData(searchInput.value, kategoriFilterInput.value);
@@ -112,4 +127,5 @@ kategoriFilterInput.addEventListener("change", () => {
   fetchData(searchInput.value, kategoriFilterInput.value);
 });
 
+// ⏬ Load awal
 fetchData("", "");
