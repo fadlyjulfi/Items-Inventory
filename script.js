@@ -1,4 +1,4 @@
-const API_URL = "https://cors-anywhere.herokuapp.com/https://itemsinventory.great-site.net/barang.php";
+const API_URL = "https://itemsinventory.great-site.net/barang.php";
 
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
