@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Inventory Barang</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Manajemen Barang</title>
+  <link rel="stylesheet" href="style.css" />
 
-  <!-- CDN Firebase (bukan import) -->
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
 
   <script>
     const firebaseConfig = {
-       apiKey: "AIzaSyD4gf6uFTflyt-xzs6QVATFORt6m9hlErw",
-         authDomain: "items-8717a.firebaseapp.com",
-        projectId: "items-8717a",
-        storageBucket: "items-8717a.firebasestorage.app",
-        messagingSenderId: "937383205110",
-        appId: "1:937383205110:web:0139a94bb1a414566ff4d7",
-        measurementId: "G-C496NQRZTR"
+      apiKey: "AIzaSyD4gf6uFTflyt-xzs6QVATFORt6m9hlErw",
+      authDomain: "items-8717a.firebaseapp.com",
+      projectId: "items-8717a",
+      storageBucket: "items-8717a.firebasestorage.app",
+      messagingSenderId: "937383205110",
+      appId: "1:937383205110:web:0139a94bb1a414566ff4d7",
+      measurementId: "G-C496NQRZTR"
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -24,16 +26,19 @@
   </script>
 </head>
 <body>
+  <div class="container">
+    <h1>📦 Inventory Barang</h1>
 
-  <!-- Form dan tampilan barang -->
-  <ul id="item-list"></ul>
-  <form id="item-form">
-    <input id="item-nama" placeholder="Nama barang">
-    <input id="item-lokasi" placeholder="Lokasi">
-    <input id="item-stok" placeholder="Stok" type="number">
-    <input id="item-kategori" placeholder="Kategori">
-    <button type="submit">Simpan</button>
-  </form>
+    <form id="item-form">
+      <input id="item-nama" type="text" placeholder="Nama Barang" required />
+      <input id="item-lokasi" type="text" placeholder="Lokasi" required />
+      <input id="item-stok" type="number" placeholder="Stok" required />
+      <input id="item-kategori" type="text" placeholder="Kategori" required />
+      <button type="submit">💾 Simpan</button>
+    </form>
+
+    <ul id="item-list"></ul>
+  </div>
 
   <script src="script.js"></script>
 </body>
