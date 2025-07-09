@@ -5,14 +5,16 @@ const lokasiInput = document.getElementById("item-lokasi");
 const stokInput = document.getElementById("item-stok");
 const kategoriInput = document.getElementById("item-kategori");
 const filterKategori = document.getElementById("filter-kategori");
+const kategoriDatalist = document.getElementById("kategori-list");
+const searchNama = document.getElementById("search-nama");
 
 let editingId = null;
 
-// Ambil semua data barang dan render
 async function fetchData() {
   try {
     const snapshot = await db.collection("barang").get();
     const filterValue = filterKategori.value.toLowerCase();
+    const searchValue = searchNama.value.toLowerCase();
     const kategoriSet = new Set();
 
     itemList.innerHTML = "";
@@ -20,8 +22,10 @@ async function fetchData() {
       const item = doc.data();
       kategoriSet.add(item.kategori);
 
-      const cocok = !filterValue || item.kategori.toLowerCase() === filterValue;
-      if (cocok) {
+      const cocokKategori = !filterValue || item.kategori.toLowerCase() === filterValue;
+      const cocokNama = !searchValue || item.nama.toLowerCase().includes(searchValue);
+
+      if (cocokKategori && cocokNama) {
         const li = document.createElement("li");
         li.innerHTML = `
           <strong>${item.nama}</strong> - ${item.kategori}<br>
@@ -41,15 +45,14 @@ async function fetchData() {
   }
 }
 
-// Update isi dropdown kategori (input & filter)
 function updateKategoriDropdown(kategoriList) {
-  kategoriInput.innerHTML = `<option value="">Pilih Kategori</option>`;
   filterKategori.innerHTML = `<option value="">🔍 Semua Kategori</option>`;
+  kategoriDatalist.innerHTML = "";
 
   kategoriList.sort().forEach(kat => {
-    const opt1 = document.createElement("option");
-    opt1.value = opt1.textContent = kat;
-    kategoriInput.appendChild(opt1);
+    const opt = document.createElement("option");
+    opt.value = kat;
+    kategoriDatalist.appendChild(opt);
 
     const opt2 = document.createElement("option");
     opt2.value = opt2.textContent = kat;
@@ -95,4 +98,5 @@ window.deleteItem = async function(id) {
 };
 
 filterKategori.addEventListener("change", fetchData);
+searchNama.addEventListener("input", fetchData);
 fetchData();
