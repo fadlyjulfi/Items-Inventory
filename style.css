@@ -91,3 +91,11 @@ li .controls {
 .controls button:hover {
   opacity: 0.9;
 }
+#filter-kategori {
+  margin-bottom: 15px;
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  width: 100%;
+}
