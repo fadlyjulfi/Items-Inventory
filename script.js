@@ -1,4 +1,4 @@
-const API_URL = "https://itemsinventory.great-site.net/barang.php"; // Ganti dengan URL kamu
+const API_URL = "https://itemsinventory.great-site.net/barang.php";
 
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
@@ -12,15 +12,21 @@ const kategoriFilterInput = document.getElementById("filter-kategori");
 let editingId = null;
 
 async function fetchData(searchFilter = "", kategoriFilter = "") {
-  const res = await fetch(API_URL);
-  const data = await res.json();
+  try {
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error("Gagal fetch data");
+    const data = await res.json();
 
-  const filtered = data.filter(item =>
-    item.nama.toLowerCase().includes(searchFilter.toLowerCase()) &&
-    item.kategori.toLowerCase().includes(kategoriFilter.toLowerCase())
-  );
+    const filtered = data.filter(item =>
+      item.nama.toLowerCase().includes(searchFilter.toLowerCase()) &&
+      item.kategori.toLowerCase().includes(kategoriFilter.toLowerCase())
+    );
 
-  renderItems(filtered);
+    renderItems(filtered);
+  } catch (err) {
+    console.error("❌ FETCH ERROR:", err);
+    itemList.innerHTML = "<li style='color:red'>Gagal mengambil data dari server.</li>";
+  }
 }
 
 function renderItems(items) {
@@ -53,23 +59,27 @@ form.addEventListener("submit", async (e) => {
 
   const itemData = { nama, lokasi, stok, kategori };
 
-  if (editingId) {
-    await fetch(`${API_URL}?method=patch&id=${editingId}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(itemData)
-    });
-    editingId = null;
-  } else {
-    await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(itemData)
-    });
+  try {
+    if (editingId) {
+      await fetch(`${API_URL}?method=patch&id=${editingId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(itemData)
+      });
+      editingId = null;
+    } else {
+      await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(itemData)
+      });
+    }
+    form.reset();
+    fetchData(searchInput.value, kategoriFilterInput.value);
+  } catch (err) {
+    alert("❌ Gagal menyimpan data.");
+    console.error(err);
   }
-
-  form.reset();
-  fetchData(searchInput.value, kategoriFilterInput.value);
 });
 
 function editItem(id, nama, lokasi, stok, kategori) {
@@ -82,10 +92,15 @@ function editItem(id, nama, lokasi, stok, kategori) {
 
 async function deleteItem(id) {
   if (confirm("Yakin ingin menghapus barang ini?")) {
-    await fetch(`${API_URL}?method=delete&id=${id}`, {
-      method: "POST"
-    });
-    fetchData(searchInput.value, kategoriFilterInput.value);
+    try {
+      await fetch(`${API_URL}?method=delete&id=${id}`, {
+        method: "POST"
+      });
+      fetchData(searchInput.value, kategoriFilterInput.value);
+    } catch (err) {
+      alert("❌ Gagal menghapus data.");
+      console.error(err);
+    }
   }
 }
 
