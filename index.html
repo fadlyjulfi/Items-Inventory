@@ -1,32 +1,54 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Stok Barang</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Inventaris Barang</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+    }
+    form input, form button, select {
+      margin: 5px 0;
+      display: block;
+      padding: 8px;
+      width: 100%;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    .controls button {
+      margin-right: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Stok Barang</h1>
+  <h1>Manajemen Inventaris</h1>
 
-    <form id="item-form">
-      <input type="text" id="item-nama" placeholder="Nama Barang" required />
-      <input type="text" id="item-lokasi" placeholder="Lokasi" required />
-      <input type="number" id="item-stok" placeholder="Stok" required />
-      <input type="text" id="item-kategori" placeholder="Kategori (Seal, Bearing...)" required />
-      <button type="submit">Tambah / Simpan</button>
-    </form>
+  <form id="item-form">
+    <input id="item-nama" placeholder="Nama Barang" required>
+    <input id="item-lokasi" placeholder="Lokasi" required>
+    <input id="item-stok" type="number" placeholder="Jumlah Stok" required>
+    <input id="item-kategori" placeholder="Kategori" required>
+    <button type="submit">Simpan</button>
+  </form>
 
-    <input type="text" id="search" placeholder="Cari nama barang..." />
-    <select id="filter-kategori">
-      <option value="">Semua Kategori</option>
-      <option value="Seal">Seal</option>
-      <option value="Bearing">Bearing</option>
-    </select>
+  <input id="search" placeholder="Cari barang...">
+  <select id="filter-kategori">
+    <option value="">Semua Kategori</option>
+    <option value="seal">Seal</option>
+    <option value="Bearing">Bearing</option>
+  </select>
 
-    <ul id="item-list"></ul>
-  </div>
+  <ul id="item-list"></ul>
 
   <script src="script.js"></script>
 </body>
