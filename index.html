@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Manajemen Barang</title>
+  <title>Inventory Barang</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore-compat.js"></script>
 
   <script>
+    // ✅ Pastikan ini sebelum script.js
     const firebaseConfig = {
       apiKey: "AIzaSyD4gf6uFTflyt-xzs6QVATFORt6m9hlErw",
       authDomain: "items-8717a.firebaseapp.com",
@@ -22,7 +23,7 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const db = firebase.firestore(); // ✅ Global db, bisa diakses script.js
   </script>
 </head>
 <body>
