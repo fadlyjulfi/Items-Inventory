@@ -27,7 +27,9 @@ form {
   margin-bottom: 20px;
 }
 
-form input {
+form input,
+form select,
+#filter-kategori {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -43,7 +45,6 @@ form button {
   cursor: pointer;
   font-weight: bold;
   font-size: 16px;
-  transition: background-color 0.2s ease;
 }
 
 form button:hover {
@@ -61,14 +62,13 @@ li {
   margin-bottom: 10px;
   padding: 15px;
   border-radius: 8px;
-  position: relative;
 }
 
 li strong {
   color: #111827;
 }
 
-li .controls {
+.controls {
   margin-top: 10px;
 }
 
@@ -90,12 +90,4 @@ li .controls {
 
 .controls button:hover {
   opacity: 0.9;
-}
-#filter-kategori {
-  margin-bottom: 15px;
-  padding: 10px;
-  font-size: 15px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  width: 100%;
 }
