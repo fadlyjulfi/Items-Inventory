@@ -8,16 +8,19 @@ const filterKategori = document.getElementById("filter-kategori");
 
 let editingId = null;
 
-// 🔍 Fetch + filter kategori
+// Ambil semua data barang dan render
 async function fetchData() {
   try {
     const snapshot = await db.collection("barang").get();
-    const filterValue = filterKategori.value;
-    itemList.innerHTML = "";
+    const filterValue = filterKategori.value.toLowerCase();
+    const kategoriSet = new Set();
 
+    itemList.innerHTML = "";
     snapshot.forEach(doc => {
       const item = doc.data();
-      const cocok = !filterValue || item.kategori === filterValue;
+      kategoriSet.add(item.kategori);
+
+      const cocok = !filterValue || item.kategori.toLowerCase() === filterValue;
       if (cocok) {
         const li = document.createElement("li");
         li.innerHTML = `
@@ -31,9 +34,27 @@ async function fetchData() {
         itemList.appendChild(li);
       }
     });
+
+    updateKategoriDropdown(Array.from(kategoriSet));
   } catch (err) {
     console.error("❌ Gagal fetch data:", err);
   }
+}
+
+// Update isi dropdown kategori (input & filter)
+function updateKategoriDropdown(kategoriList) {
+  kategoriInput.innerHTML = `<option value="">Pilih Kategori</option>`;
+  filterKategori.innerHTML = `<option value="">🔍 Semua Kategori</option>`;
+
+  kategoriList.sort().forEach(kat => {
+    const opt1 = document.createElement("option");
+    opt1.value = opt1.textContent = kat;
+    kategoriInput.appendChild(opt1);
+
+    const opt2 = document.createElement("option");
+    opt2.value = opt2.textContent = kat;
+    filterKategori.appendChild(opt2);
+  });
 }
 
 form.addEventListener("submit", async (e) => {
@@ -73,7 +94,5 @@ window.deleteItem = async function(id) {
   }
 };
 
-// 🔄 Refresh saat filter kategori berubah
 filterKategori.addEventListener("change", fetchData);
-
 fetchData();
