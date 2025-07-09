@@ -1,54 +1,38 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Stock barang</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
-    form input, form button, select {
-      margin: 5px 0;
-      display: block;
-      padding: 8px;
-      width: 100%;
-    }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      border: 1px solid #ccc;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    .controls button {
-      margin-right: 10px;
-    }
-  </style>
+  <title>Inventory Barang</title>
+
+  <!-- CDN Firebase (bukan import) -->
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "API_KEY_KAMU",
+      authDomain: "PROJECT_ID.firebaseapp.com",
+      projectId: "PROJECT_ID",
+      storageBucket: "PROJECT_ID.appspot.com",
+      messagingSenderId: "XXX",
+      appId: "XXX"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
 </head>
 <body>
-  <h1>Informasi Stock</h1>
 
+  <!-- Form dan tampilan barang -->
+  <ul id="item-list"></ul>
   <form id="item-form">
-    <input id="item-nama" placeholder="Nama Barang" required>
-    <input id="item-lokasi" placeholder="Lokasi" required>
-    <input id="item-stok" type="number" placeholder="Jumlah Stok" required>
-    <input id="item-kategori" placeholder="Kategori" required>
+    <input id="item-nama" placeholder="Nama barang">
+    <input id="item-lokasi" placeholder="Lokasi">
+    <input id="item-stok" placeholder="Stok" type="number">
+    <input id="item-kategori" placeholder="Kategori">
     <button type="submit">Simpan</button>
   </form>
-
-  <input id="search" placeholder="Cari barang...">
-  <select id="filter-kategori">
-    <option value="">Semua Kategori</option>
-    <option value="seal">Seal</option>
-    <option value="Bearing">Bearing</option>
-  </select>
-
-  <ul id="item-list"></ul>
 
   <script src="script.js"></script>
 </body>
