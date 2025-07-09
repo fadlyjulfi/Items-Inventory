@@ -15,12 +15,10 @@
       apiKey: "AIzaSyD4gf6uFTflyt-xzs6QVATFORt6m9hlErw",
       authDomain: "items-8717a.firebaseapp.com",
       projectId: "items-8717a",
-      storageBucket: "items-8717a.firebasestorage.app",
+      storageBucket: "items-8717a.appspot.com",
       messagingSenderId: "937383205110",
-      appId: "1:937383205110:web:0139a94bb1a414566ff4d7",
-      measurementId: "G-C496NQRZTR"
+      appId: "1:937383205110:web:0139a94bb1a414566ff4d7"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
   </script>
@@ -33,11 +31,12 @@
       <input id="item-nama" type="text" placeholder="Nama Barang" required />
       <input id="item-lokasi" type="text" placeholder="Lokasi" required />
       <input id="item-stok" type="number" placeholder="Stok" required />
-      <select id="item-kategori" required>
-        <option value="">Pilih Kategori</option>
-      </select>
+      <input id="item-kategori" list="kategori-list" placeholder="Kategori" required />
+      <datalist id="kategori-list"></datalist>
       <button type="submit">💾 Simpan</button>
     </form>
+
+    <input id="search-nama" type="text" placeholder="🔍 Cari Nama Barang..." />
 
     <select id="filter-kategori">
       <option value="">🔍 Semua Kategori</option>
