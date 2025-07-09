@@ -1,4 +1,5 @@
-const API_URL = "itemsinventory.great-site.net/barang.php"; // Ganti dengan URL kamu
+const API_URL = "https://itemsinventory.great-site.net/barang.php
+"; // Ganti dengan URL kamu
 
 const itemList = document.getElementById("item-list");
 const form = document.getElementById("item-form");
