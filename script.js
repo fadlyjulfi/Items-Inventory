@@ -4,25 +4,32 @@ const namaInput = document.getElementById("item-nama");
 const lokasiInput = document.getElementById("item-lokasi");
 const stokInput = document.getElementById("item-stok");
 const kategoriInput = document.getElementById("item-kategori");
+const filterKategori = document.getElementById("filter-kategori");
 
 let editingId = null;
 
+// 🔍 Fetch + filter kategori
 async function fetchData() {
   try {
     const snapshot = await db.collection("barang").get();
+    const filterValue = filterKategori.value;
     itemList.innerHTML = "";
+
     snapshot.forEach(doc => {
       const item = doc.data();
-      const li = document.createElement("li");
-      li.innerHTML = `
-        <strong>${item.nama}</strong> - ${item.kategori}<br>
-        Lokasi: ${item.lokasi}, Stok: ${item.stok}<br>
-        <div class="controls">
-          <button onclick="editItem('${doc.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori}')">Edit</button>
-          <button onclick="deleteItem('${doc.id}')">Hapus</button>
-        </div>
-      `;
-      itemList.appendChild(li);
+      const cocok = !filterValue || item.kategori === filterValue;
+      if (cocok) {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${item.nama}</strong> - ${item.kategori}<br>
+          Lokasi: ${item.lokasi}, Stok: ${item.stok}<br>
+          <div class="controls">
+            <button onclick="editItem('${doc.id}', '${item.nama}', '${item.lokasi}', ${item.stok}, '${item.kategori}')">Edit</button>
+            <button onclick="deleteItem('${doc.id}')">Hapus</button>
+          </div>
+        `;
+        itemList.appendChild(li);
+      }
     });
   } catch (err) {
     console.error("❌ Gagal fetch data:", err);
@@ -65,5 +72,8 @@ window.deleteItem = async function(id) {
     fetchData();
   }
 };
+
+// 🔄 Refresh saat filter kategori berubah
+filterKategori.addEventListener("change", fetchData);
 
 fetchData();
