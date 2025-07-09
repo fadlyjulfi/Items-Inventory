@@ -11,7 +11,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.3.1/firebase-firestore-compat.js"></script>
 
   <script>
-    // ✅ Pastikan ini sebelum script.js
     const firebaseConfig = {
       apiKey: "AIzaSyD4gf6uFTflyt-xzs6QVATFORt6m9hlErw",
       authDomain: "items-8717a.firebaseapp.com",
@@ -23,7 +22,7 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(); // ✅ Global db, bisa diakses script.js
+    const db = firebase.firestore();
   </script>
 </head>
 <body>
@@ -34,7 +33,11 @@
       <input id="item-nama" type="text" placeholder="Nama Barang" required />
       <input id="item-lokasi" type="text" placeholder="Lokasi" required />
       <input id="item-stok" type="number" placeholder="Stok" required />
-      <input id="item-kategori" type="text" placeholder="Kategori" required />
+      <select id="item-kategori" required>
+        <option value="">Pilih Kategori</option>
+        <option value="Seal">Seal</option>
+        <option value="Bearing">Bearing</option>
+      </select>
       <button type="submit">💾 Simpan</button>
     </form>
 
